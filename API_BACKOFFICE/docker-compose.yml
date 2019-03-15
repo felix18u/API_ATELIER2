@@ -1,0 +1,29 @@
+version: '3.6'
+services:
+  apibackoffice:
+    build:
+      context: .
+      dockerfile: apibackoffice.dockerfile
+    ports:
+      - "8081:8081"
+    networks:
+      - isolated_nw2
+    container_name: apibackoffice
+    depends_on:
+      - pgbd
+
+  pgbd:
+    image: postgres
+    ports:
+      - "5432:5432"
+    networks:
+      - isolated_nw2
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: riovas
+    container_name: postgres
+
+networks:
+  isolated_nw2:
+    driver: bridge
