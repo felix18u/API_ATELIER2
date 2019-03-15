@@ -1,4 +1,4 @@
-package com.player.pl.entity;
+package com.backoffice.bo.entity;
 
 import java.util.Date;
 import java.util.HashSet;
