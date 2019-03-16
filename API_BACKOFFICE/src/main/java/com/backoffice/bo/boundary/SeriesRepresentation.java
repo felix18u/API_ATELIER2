@@ -10,9 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.backoffice.bo.entity.Series;
 import com.backoffice.bo.exception.NotFound;
-import java.util.Date;
 import java.util.UUID;
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -23,13 +21,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/series")
 public class SeriesRepresentation {
 
+    private final PartieRepository pr;
+    private final PhotoRepository fr;
     private final SeriesRepository sr;
 
-    public SeriesRepresentation(SeriesRepository sr) {
-            super();
-            this.sr = sr;
+    public SeriesRepresentation(PartieRepository pr,PhotoRepository fr,SeriesRepository sr) {
+        this.pr = pr;
+        this.fr = fr;
+        this.sr = sr;
     }
 
+    /*Partie series*/
+    
     @GetMapping()
     public ResponseEntity<?> getSeries(){
             Iterable<Series> categories = sr.findAll();
@@ -37,13 +40,13 @@ public class SeriesRepresentation {
     }
 
     @GetMapping(value = "/{seriesId}")
-    public ResponseEntity<?> getSeriesById(@PathVariable("seriesId") String id){		
+    public ResponseEntity<?> getSerieById(@PathVariable("seriesId") String id){		
             return Optional.ofNullable(sr.findById(id))
                             .filter(Optional::isPresent)
                             .map(series -> new ResponseEntity<>(series.get(),HttpStatus.OK))
                             .orElseThrow( () -> new NotFound("Series inexistant"));		
     }
-	
+
     @PostMapping
     public ResponseEntity<?> postMethod(@RequestBody Series series) {
         series.setId(UUID.randomUUID().toString());
@@ -75,4 +78,7 @@ public class SeriesRepresentation {
                     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
                 }).orElseThrow(() -> new NotFound("Series inexistant"));
     }
+    
+    /*Partie mobile/photos*/
+    
 }

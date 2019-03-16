@@ -1,6 +1,6 @@
-package com.player.pl.boundary;
+package com.backoffice.bo.boundary;
 
-import com.player.pl.entity.Partie;
+import com.backoffice.bo.entity.Partie;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;

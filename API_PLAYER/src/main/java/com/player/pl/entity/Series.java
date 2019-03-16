@@ -12,8 +12,8 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "series")
-public class Series { 
-	
+public class Series {
+
     @Id
     private String id;
     private String ville;
@@ -26,9 +26,10 @@ public class Series {
     @OneToMany(mappedBy = "serie", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
     private Set<Partie> partie = new HashSet<>();
-    Series(){
-        
-     //pour JPA	
+
+    Series() {
+
+        //pour JPA	
     }
 
     public Series(String ville, String map_ref, String dist) {
@@ -37,44 +38,52 @@ public class Series {
         this.dist = dist;
     }
 
-    public String getId()
-	{
-		return this.id;
-	}
+    public String getId() {
+        return this.id;
+    }
 
-	public void setId(String id)
-	{
-		this.id = id;
-	}
+    public void setId(String id) {
+        this.id = id;
+    }
 
-	public String getVille()
-	{
-		return this.ville;
-	}
+    public String getVille() {
+        return this.ville;
+    }
 
-	public void setVille(String ville)
-	{
-		this.ville = ville;
-	}
+    public void setVille(String ville) {
+        this.ville = ville;
+    }
 
-	public String getMap_ref()
-	{
-		return this.map_ref;
-	}
+    public String getMap_ref() {
+        return this.map_ref;
+    }
 
-	public void setMap_ref(String map_ref)
-	{
-		this.map_ref = map_ref;
-	}
+    public void setMap_ref(String map_ref) {
+        this.map_ref = map_ref;
+    }
 
-	public String getDist()
-	{
-		return this.dist;
-	}
+    public String getDist() {
+        return this.dist;
+    }
 
-	public void setDist(String dist)
-	{
-		this.dist = dist;
-	}
+    public void setDist(String dist) {
+        this.dist = dist;
+    }
     
+    public Set<Photo> getPhoto() {
+        return this.photo;
+    }
+
+    public void setPhoto(Set<Photo> photo) {
+        this.photo = photo;
+    }
+
+    public Set<Partie> getPartie() {
+        return this.partie;
+    }
+
+    public void setPartie(Set<Partie> partie) {
+        this.partie = partie;
+    }
+
 }

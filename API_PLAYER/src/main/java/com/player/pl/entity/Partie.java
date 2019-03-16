@@ -27,20 +27,20 @@ public class Partie {
     @CreationTimestamp
     private Date created;
 
-    // @ManyToOne
-    // @JoinColumn(name = "serie_id", nullable = false)
-    //     private Series serie;
+    @ManyToOne
+    @JoinColumn(name = "serie_id", nullable = false)
+    private Series serie;
 
-    // @ManyToMany(cascade = {
-    //     CascadeType.PERSIST,
-    //     CascadeType.MERGE
-    // })
-    
-    // @JoinTable(name = "partie_photo",
-    //     joinColumns = @JoinColumn(name = "partie_id"),
-    //     inverseJoinColumns = @JoinColumn(name = "photo_id"))
-    //     private Set<Photo> photo = new HashSet<>();
-    
+    @ManyToMany(cascade = {
+        CascadeType.PERSIST,
+        CascadeType.MERGE
+    })
+
+    @JoinTable(name = "partie_photo",
+            joinColumns = @JoinColumn(name = "partie_id"),
+            inverseJoinColumns = @JoinColumn(name = "photo_id"))
+    private Set<Photo> photo = new HashSet<>();
+
     Partie() {
         //pour JPA	
     }
@@ -107,6 +107,27 @@ public class Partie {
 
     public void setCreated(Date created) {
         this.created = created;
+    }
+    
+    public void addPhoto(Photo photo) {
+        this.photo.add(photo);
+        photo.getPartie().add(this);
+    }
+
+    public Series getSerie() {
+        return this.serie;
+    }
+
+    public void setSerie(Series serie) {
+        this.serie = serie;
+    }
+
+    public Set<Photo> getPhoto() {
+        return this.photo;
+    }
+
+    public void setPhoto(Set<Photo> photo) {
+        this.photo = photo;
     }
 
 }
