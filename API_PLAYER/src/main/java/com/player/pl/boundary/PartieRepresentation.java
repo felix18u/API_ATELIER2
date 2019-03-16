@@ -11,26 +11,28 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.player.pl.entity.Partie;
-import com.player.pl.entity.JwtResponse;
 import com.player.pl.exception.NotFound;
 import java.util.Date;
 import java.util.UUID;
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @RequestMapping("/partie")
 public class PartieRepresentation {
 
     private final PartieRepository pr;
+    private final PhotoRepository fr;
+    private final SerieRepository sr;
 
-    public PartieRepresentation(PartieRepository pr) {
-            super();
-            this.pr = pr;
+    public PartieRepresentation(PartieRepository pr,PhotoRepository fr,SerieRepository sr) {
+        super();
+        this.pr = pr;
+        this.fr = fr;
+        this.sr = sr;
     }
 
     public String generateToken(@RequestBody Partie partie) {
@@ -40,19 +42,21 @@ public class PartieRepresentation {
                 .compact();
     }
 
-    // @GetMapping()
-    // public ResponseEntity<?> getParties(){
-    //         Iterable<Partie> parties = pr.findAll();
-    //         return new ResponseEntity<>(parties,HttpStatus.OK);		
-    // }
+    @GetMapping()
+    public ResponseEntity<?> getParties(
+        @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
+        @RequestParam(value = "limit", required = false, defaultValue = "10") Integer limit){
+            Iterable<Partie> parties = pr.findAll();
+            return new ResponseEntity<>(parties,HttpStatus.OK);		
+    }
 
-    // @GetMapping(value = "/{partieId}")
-    // public ResponseEntity<?> getPartieById(@PathVariable("partieId") String id){		
-    //         return Optional.ofNullable(pr.findById(id))
-    //                         .filter(Optional::isPresent)
-    //                         .map(partie -> new ResponseEntity<>(partie.get(),HttpStatus.OK))
-    //                         .orElseThrow( () -> new NotFound("Categorie inexistant"));		
-    // }
+    @GetMapping(value = "/{partieId}")
+    public ResponseEntity<?> getPartieById(@PathVariable("partieId") String id){		
+            return Optional.ofNullable(pr.findById(id))
+                            .filter(Optional::isPresent)
+                            .map(partie -> new ResponseEntity<>(partie.get(),HttpStatus.OK))
+                            .orElseThrow( () -> new NotFound("Partie inexistant"));		
+    }
 	
     @PostMapping
     public ResponseEntity<?> postMethod(@RequestBody Partie partie) {
@@ -63,15 +67,15 @@ public class PartieRepresentation {
     }
     
     @PutMapping(value = "/{partieId}")
-    public ResponseEntity<?> updateCategorie(@PathVariable("partieId") String partieId,
+    public ResponseEntity<?> updatePartie(@PathVariable("partieId") String partieId,
             @RequestBody Partie partieUpdated) {
         
         if (!pr.existsById(partieId)) {
             throw new NotFound("Partie inexistante");
         }
         return pr.findById(partieId)
-                .map(categorie -> {
-                    partieUpdated.setId(categorie.getId());
+                .map(Partie -> {
+                    partieUpdated.setId(Partie.getId());
                     pr.save(partieUpdated);
                     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
                 }).orElseThrow(() -> new NotFound("Partie inexistante"));
