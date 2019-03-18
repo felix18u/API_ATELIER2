@@ -17,7 +17,8 @@ public class Photo {
     @Id
     private String id;
     private String descr;
-    private String position;
+    private String lon;
+    private String lat;
     private String url;
 
     @ManyToOne
@@ -33,9 +34,10 @@ public class Photo {
         // necessaire pour JPA !
     }
 
-    public Photo(String descr, String position, String url, Series serie) {
+    public Photo(String descr, String lon, String lat, String url, Series serie) {
         this.descr = descr;
-        this.position = position;
+        this.lon = lon;
+        this.lat = lat;
         this.url = url;
         this.serie = serie;
     }
@@ -69,14 +71,6 @@ public class Photo {
         this.descr = descr;
     }
 
-    public String getPosition() {
-        return this.position;
-    }
-
-    public void setPosition(String position) {
-        this.position = position;
-    }
-
     public String getUrl() {
         return this.url;
     }
@@ -85,4 +79,29 @@ public class Photo {
         this.url = url;
     }
 
+    public String getDescr() {
+        return descr;
+    }
+
+    public void setDescr(String descr) {
+        this.descr = descr;
+    }
+
+    public String getLon() {
+        return lon;
+    }
+
+    public void setLon(String lon) {
+        this.lon = lon;
+    }
+
+    public String getLat() {
+        return lat;
+    }
+
+    public void setLat(String lat) {
+        this.lat = lat;
+    }
+
+    
 }

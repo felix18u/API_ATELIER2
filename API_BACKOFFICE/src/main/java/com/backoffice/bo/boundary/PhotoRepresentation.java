@@ -17,6 +17,7 @@ import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,12 +30,14 @@ public class PhotoRepresentation {
 
 
     private final PhotoRepository fr;
+    private final SeriesRepository sr;
 
     private final Logger logger = LoggerFactory.getLogger(PhotoRepresentation.class);
     private static String UPLOADED_FOLDER = "./tmp/";
 
-    public PhotoRepresentation(PhotoRepository fr) {
+    public PhotoRepresentation(PhotoRepository fr, SeriesRepository sr) {
         this.fr = fr;
+        this.sr = sr;
     }
 
     /*Partie photo*/
@@ -57,9 +60,11 @@ public class PhotoRepresentation {
 
     }
     
-    @PostMapping(value = "/info")
-    public ResponseEntity<?> uploadInfo(@RequestBody Photo photo) {
+    @PostMapping(value = "/info/{serieid}")
+    public ResponseEntity<?> uploadInfo(@PathVariable("serieid") String serieid, @RequestBody Photo photo) {
         photo.setId(UUID.randomUUID().toString());
+        Series serie = sr.findById(serieid).get();
+        photo.setSerie(serie);
         Photo saved = fr.save(photo);
         return new ResponseEntity<>(saved, HttpStatus.CREATED);
     }
