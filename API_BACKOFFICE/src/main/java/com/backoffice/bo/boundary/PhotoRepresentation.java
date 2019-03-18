@@ -51,7 +51,7 @@ public class PhotoRepresentation {
     @GetMapping("/{photoid}")
     public ResponseEntity<?> uploadFile(@PathVariable("photoid") String photoid) throws IOException {
         Optional<Photo> photo = fr.findById(photoid);
-        String lien = photo.get().getId();
+        String lien = photo.get().getUrl();
         Path path = Paths.get(UPLOADED_FOLDER+lien);
         byte[] bytes=Files.readAllBytes(path);
         return ResponseEntity.ok().contentType(MediaType.MULTIPART_FORM_DATA).body(bytes);
