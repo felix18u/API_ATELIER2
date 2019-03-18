@@ -79,6 +79,4 @@ public class SeriesRepresentation {
                 }).orElseThrow(() -> new NotFound("Series inexistant"));
     }
     
-    /*Partie mobile/photos*/
-    
 }
