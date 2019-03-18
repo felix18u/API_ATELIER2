@@ -109,4 +109,25 @@ public class Partie {
         this.created = created;
     }
 
+    public void addPhoto(Photo photo) {
+        this.photo.add(photo);
+        photo.getPartie().add(this);
+    }
+
+    public Series getSerie() {
+        return this.serie;
+    }
+
+    public void setSerie(Series serie) {
+        this.serie = serie;
+    }
+
+    public Set<Photo> getPhoto() {
+        return this.photo;
+    }
+
+    public void setPhoto(Set<Photo> photo) {
+        this.photo = photo;
+    }
+
 }

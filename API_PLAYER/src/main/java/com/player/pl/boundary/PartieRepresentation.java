@@ -96,7 +96,7 @@ public class PartieRepresentation {
 
     @PutMapping(value = "/{partieId}")
     public ResponseEntity<?> updatePartie(@PathVariable("partieId") String partieId,
-            @RequestBody Partie partieUpdated) {
+            @RequestBody Partie partieUpdated, @RequestHeader(value = "token", required = false, defaultValue = "") String tokenHeader) {
 
         if (!pr.existsById(partieId)) {
             throw new NotFound("Partie inexistante");
@@ -104,6 +104,7 @@ public class PartieRepresentation {
         return pr.findById(partieId)
                 .map(Partie -> {
                     partieUpdated.setId(Partie.getId());
+                    partieUpdated.setSerie(Partie.getSerie());
                     pr.save(partieUpdated);
                     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
                 }).orElseThrow(() -> new NotFound("Partie inexistante"));
