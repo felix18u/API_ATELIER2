@@ -39,7 +39,7 @@ public class PhotoRepresentation {
 
     /*Partie photo*/
     
-    @PostMapping()
+    @PostMapping(value = "/upload")
     public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile uploadfile) {
 
         logger.debug("File upload!");
@@ -57,7 +57,7 @@ public class PhotoRepresentation {
 
     }
     
-    @PostMapping()
+    @PostMapping(value = "/info")
     public ResponseEntity<?> uploadInfo(@RequestBody Photo photo) {
         photo.setId(UUID.randomUUID().toString());
         Photo saved = fr.save(photo);
