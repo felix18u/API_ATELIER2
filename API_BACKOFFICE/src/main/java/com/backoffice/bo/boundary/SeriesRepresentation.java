@@ -24,17 +24,18 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
+@RequestMapping("/series")
 public class SeriesRepresentation {
 
     private final PartieRepository pr;
     private final PhotoRepository fr;
     private final SeriesRepository sr;
-    private final Logger logger = LoggerFactory.getLogger(SeriesRepresentation.class);
-    private static String UPLOADED_FOLDER = "./tmp/";
 
     public SeriesRepresentation(PartieRepository pr,PhotoRepository fr,SeriesRepository sr) {
         this.pr = pr;
@@ -44,13 +45,13 @@ public class SeriesRepresentation {
 
     /*Partie series*/
     
-    @GetMapping(value = "/series")
+    @GetMapping()
     public ResponseEntity<?> getSeries(){
             Iterable<Series> categories = sr.findAll();
             return new ResponseEntity<>(categories,HttpStatus.OK);		
     }
 
-    @GetMapping(value = "/series/{seriesId}")
+    @GetMapping(value = "/{seriesId}")
     public ResponseEntity<?> getSerieById(@PathVariable("seriesId") String id){		
             return Optional.ofNullable(sr.findById(id))
                             .filter(Optional::isPresent)
@@ -58,14 +59,14 @@ public class SeriesRepresentation {
                             .orElseThrow( () -> new NotFound("Series inexistant"));		
     }
 
-    @PostMapping(value = "/series")
+    @PostMapping
     public ResponseEntity<?> postMethod(@RequestBody Series series) {
         series.setId(UUID.randomUUID().toString());
         Series saved = sr.save(series);
         return new ResponseEntity<>(saved, HttpStatus.CREATED);
     }
     
-    @PutMapping(value = "/series/{seriesId}")
+    @PutMapping(value = "/{seriesId}")
     public ResponseEntity<?> updateSeries(@PathVariable("seriesId") String seriesId,
             @RequestBody Series seriesUpdated) {
         
@@ -80,7 +81,7 @@ public class SeriesRepresentation {
                 }).orElseThrow(() -> new NotFound("Series inexistant"));
     }
     
-    @DeleteMapping(value = "/series/{seriesId}")
+    @DeleteMapping(value = "/{seriesId}")
     public ResponseEntity<?> deleteProjet(@PathVariable("seriesId") String seriesId) {
         
         return sr.findById(seriesId)
@@ -88,38 +89,5 @@ public class SeriesRepresentation {
                     sr.delete(projet);
                     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
                 }).orElseThrow(() -> new NotFound("Series inexistant"));
-    }
-    
-    /*Partie photo*/
-    
-    @PostMapping(value = "/photos")
-    public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile uploadfile) {
-
-        logger.debug("File upload!");
-
-        if (uploadfile.isEmpty()) {
-            return new ResponseEntity("No file", HttpStatus.BAD_REQUEST);
-        }
-        try {
-            saveUploadedFiles(Arrays.asList(uploadfile));
-        } catch (IOException e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-        return new ResponseEntity("Uploaded - " + uploadfile.getOriginalFilename(), 
-                new HttpHeaders(), HttpStatus.OK);
-
-    }
-
-    private void saveUploadedFiles(List<MultipartFile> files) throws IOException {
-
-        for (MultipartFile file : files) {
-            if (file.isEmpty()) {
-                continue;
-            }
-            byte[] bytes = file.getBytes();
-            Path path = Paths.get(UPLOADED_FOLDER + file.getOriginalFilename());
-            Files.write(path, bytes);
-        }
-    }
-    
+    }    
 }
