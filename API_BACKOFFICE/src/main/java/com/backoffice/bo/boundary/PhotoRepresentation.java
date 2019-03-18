@@ -41,6 +41,12 @@ public class PhotoRepresentation {
         this.sr = sr;
     }
 
+    @GetMapping()
+    public ResponseEntity<?> getPhotos() {
+        Iterable<Photo> photo = fr.findAll();
+        return new ResponseEntity<>(photo, HttpStatus.OK);
+    }
+    
     /*Partie photo*/
     @GetMapping("/{photoid}")
     public ResponseEntity<?> uploadFile(@PathVariable("photoid") String photoid) throws IOException {
