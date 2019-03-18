@@ -33,6 +33,13 @@ public class Photo {
         // necessaire pour JPA !
     }
 
+    public Photo(String descr, String position, String url, Series serie) {
+        this.descr = descr;
+        this.position = position;
+        this.url = url;
+        this.serie = serie;
+    }
+
     public String getId() {
         return this.id;
     }

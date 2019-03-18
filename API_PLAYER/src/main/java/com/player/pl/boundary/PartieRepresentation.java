@@ -88,12 +88,6 @@ public class PartieRepresentation {
         if (partie.getNb_photos() == null) {
             partie.setNb_photos("10");
         }
-        if (Integer.parseInt(partie.getNb_photos()) >= shufflePhoto.size()) {
-            partie.setNb_photos(String.valueOf(shufflePhoto.size()));
-        }
-        shufflePhoto.subList(0, Integer.parseInt(partie.getNb_photos())).forEach(photo -> {
-            partie.addPhoto(photo);
-        });
         Partie saved = pr.save(partie);
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.setLocation(linkTo(PartieRepresentation.class).slash(saved.getId()).toUri());
