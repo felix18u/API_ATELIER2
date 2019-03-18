@@ -36,8 +36,6 @@ public class SeriesRepresentation {
     private final PartieRepository pr;
     private final PhotoRepository fr;
     private final SeriesRepository sr;
-    private final Logger logger = LoggerFactory.getLogger(SeriesRepresentation.class);
-    private static String UPLOADED_FOLDER = "./tmp/";
 
     public SeriesRepresentation(PartieRepository pr,PhotoRepository fr,SeriesRepository sr) {
         this.pr = pr;

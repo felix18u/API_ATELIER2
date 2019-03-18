@@ -1,6 +1,8 @@
 package com.backoffice.bo.boundary;
 
 
+import com.backoffice.bo.entity.Photo;
+import com.backoffice.bo.entity.Series;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -11,10 +13,12 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,16 +27,14 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/photos")
 public class PhotoRepresentation {
 
-    private final PartieRepository pr;
+
     private final PhotoRepository fr;
-    private final SeriesRepository sr;
+
     private final Logger logger = LoggerFactory.getLogger(PhotoRepresentation.class);
     private static String UPLOADED_FOLDER = "./tmp/";
 
-    public PhotoRepresentation(PartieRepository pr,PhotoRepository fr,SeriesRepository sr) {
-        this.pr = pr;
+    public PhotoRepresentation(PhotoRepository fr) {
         this.fr = fr;
-        this.sr = sr;
     }
 
     /*Partie photo*/
@@ -53,6 +55,13 @@ public class PhotoRepresentation {
         return new ResponseEntity("Uploaded - " + uploadfile.getOriginalFilename(), 
                 new HttpHeaders(), HttpStatus.OK);
 
+    }
+    
+    @PostMapping()
+    public ResponseEntity<?> uploadInfo(@RequestBody Photo photo) {
+        photo.setId(UUID.randomUUID().toString());
+        Photo saved = fr.save(photo);
+        return new ResponseEntity<>(saved, HttpStatus.CREATED);
     }
 
     private void saveUploadedFiles(List<MultipartFile> files) throws IOException {
