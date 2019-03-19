@@ -116,7 +116,7 @@ public class PartieRepresentation {
                     partieUpdated.setId(Partie.getId());
                     partieUpdated.setSerie(Partie.getSerie());
                     pr.save(partieUpdated);
-                    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+                    return new ResponseEntity<>(Partie, HttpStatus.CREATED);
                 }).orElseThrow(() -> new NotFound("Partie inexistante"));
     }
 
