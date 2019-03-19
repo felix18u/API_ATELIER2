@@ -58,7 +58,7 @@ public class PhotoRepresentation {
     public ResponseEntity<?> uploadFile(@PathVariable("photoid") String photoid) throws IOException {
         Optional<Photo> photo = fr.findById(photoid);
         String lien = photo.get().getUrl();
-        Path path = Paths.get(UPLOADED_FOLDER+lien);
+        Path path = Paths.get(lien);
         byte[] bytes=Files.readAllBytes(path);
         return ResponseEntity.ok().contentType(MediaType.MULTIPART_FORM_DATA).body(bytes);
     }
