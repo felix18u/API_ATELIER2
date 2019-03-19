@@ -66,16 +66,19 @@ public class PhotoRepresentation {
     public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile uploadfile) {
 
         logger.debug("File upload!");
-
+        Photo saved;
         if (uploadfile.isEmpty()) {
             return new ResponseEntity("No file", HttpStatus.BAD_REQUEST);
         }
         try {
             saveUploadedFiles(Arrays.asList(uploadfile));
+            Photo photo = new Photo(null, null, null, UPLOADED_FOLDER + uploadfile.getOriginalFilename(), new Series(null, null, null, null, null, null));
+            photo.setId(UUID.randomUUID().toString());
+            saved = fr.save(photo);
         } catch (IOException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity("Uploaded - " + uploadfile.getOriginalFilename(),
+        return new ResponseEntity("{\"id\":\"" + saved.getId() + "\",\"file\":\"" + uploadfile.getOriginalFilename() + "\"}",
                 new HttpHeaders(), HttpStatus.OK);
     }
 
