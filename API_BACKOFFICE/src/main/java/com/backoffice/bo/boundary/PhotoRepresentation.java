@@ -90,13 +90,13 @@ public class PhotoRepresentation {
         if (!fr.existsById(photoid)) {
             throw new NotFound("Photo inexistante");
         }
-        return fr.findById(photoid)
-                .map(Photo -> {
-                    photoUpdated.setId(Photo.getId());
-                    photoUpdated.setSerie(Photo.getSerie());
-                    fr.save(photoUpdated);
-                    return new ResponseEntity<>(Photo, HttpStatus.CREATED);
-                }).orElseThrow(() -> new NotFound("Series inexistante"));
+        Photo photo = fr.findById(photoid).get();
+        if(photoUpdated.getDescr() != null) { photo.setDescr(photoUpdated.getDescr()); }
+        if(photoUpdated.getLon() != null) { photo.setLon(photoUpdated.getLon()); }
+        if(photoUpdated.getLat() != null) { photo.setLat(photoUpdated.getLat()); }
+        if(photoUpdated.getUrl() != null) { photo.setUrl(photoUpdated.getUrl()); }
+        Photo saved = fr.save(photo);
+        return new ResponseEntity<>(saved, HttpStatus.CREATED);
     }
 
     private void saveUploadedFiles(List<MultipartFile> files) throws IOException {

@@ -79,12 +79,15 @@ public class SeriesRepresentation {
         if (!sr.existsById(seriesId)) {
             throw new NotFound("Series inexistant");
         }
-        return sr.findById(seriesId)
-                .map(categorie -> {
-                    seriesUpdated.setId(categorie.getId());
-                    sr.save(seriesUpdated);
-                    return new ResponseEntity<>(categorie, HttpStatus.CREATED);
-                }).orElseThrow(() -> new NotFound("Series inexistant"));
+        Series series = sr.findById(seriesId).get();
+        if(seriesUpdated.getVille() != null) { series.setVille(seriesUpdated.getVille()); }
+        if(seriesUpdated.getLon1() != null) { series.setLon1(seriesUpdated.getLon1()); }
+        if(seriesUpdated.getLat1() != null) { series.setLat1(seriesUpdated.getLat1()); }
+        if(seriesUpdated.getLon2() != null) { series.setLon2(seriesUpdated.getLon2()); }
+        if(seriesUpdated.getLat2() != null) { series.setLat2(seriesUpdated.getLat2()); }
+        if(seriesUpdated.getDist() != null) { series.setDist(seriesUpdated.getDist()); }
+        Series saved = sr.save(series);
+        return new ResponseEntity<>(saved, HttpStatus.CREATED);
     }
     
     @ApiOperation(value = "Permet de supprimer une série")

@@ -111,13 +111,14 @@ public class PartieRepresentation {
         if (!pr.existsById(partieId)) {
             throw new NotFound("Partie inexistante");
         }
-        return pr.findById(partieId)
-                .map(Partie -> {
-                    partieUpdated.setId(Partie.getId());
-                    partieUpdated.setSerie(Partie.getSerie());
-                    pr.save(partieUpdated);
-                    return new ResponseEntity<>(Partie, HttpStatus.CREATED);
-                }).orElseThrow(() -> new NotFound("Partie inexistante"));
+        Partie partie = pr.findById(partieId).get();
+        if(partieUpdated.getNb_photos() != null) { partie.setNb_photos(partieUpdated.getNb_photos()); }
+        if(partieUpdated.getStatus() != null) { partie.setStatus(partieUpdated.getStatus()); }
+        if(partieUpdated.getScore() != null) { partie.setScore(partieUpdated.getScore()); }
+        if(partieUpdated.getJoueur() != null) { partie.setJoueur(partieUpdated.getJoueur()); }
+        Partie saved = pr.save(partie);
+        return new ResponseEntity<>(saved, HttpStatus.CREATED);
+        
     }
 
     @ApiOperation(value = "Permet de supprimer une partie")
