@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.backoffice.bo.entity.Series;
 import com.backoffice.bo.exception.NotFound;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -30,6 +32,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
+@Api(description="API Pour la getion des series pour l'atelier 2")
 @RequestMapping("/series")
 public class SeriesRepresentation {
 
@@ -43,14 +46,15 @@ public class SeriesRepresentation {
         this.sr = sr;
     }
 
-    /*Partie series*/
     
+    @ApiOperation(value = "Permet de récupèrer toutes les series")
     @GetMapping()
     public ResponseEntity<?> getSeries(){
             Iterable<Series> categories = sr.findAll();
             return new ResponseEntity<>(categories,HttpStatus.OK);		
     }
 
+    @ApiOperation(value = "Permet de récupèrer une série avec son id")
     @GetMapping(value = "/{seriesId}")
     public ResponseEntity<?> getSerieById(@PathVariable("seriesId") String id){		
             return Optional.ofNullable(sr.findById(id))
@@ -59,6 +63,7 @@ public class SeriesRepresentation {
                             .orElseThrow( () -> new NotFound("Series inexistant"));		
     }
 
+    @ApiOperation(value = "Permet de créer une série")
     @PostMapping
     public ResponseEntity<?> postMethod(@RequestBody Series series) {
         series.setId(UUID.randomUUID().toString());
@@ -66,6 +71,7 @@ public class SeriesRepresentation {
         return new ResponseEntity<>(saved, HttpStatus.CREATED);
     }
     
+    @ApiOperation(value = "Permet de modifier une série")
     @PutMapping(value = "/{seriesId}")
     public ResponseEntity<?> updateSeries(@PathVariable("seriesId") String seriesId,
             @RequestBody Series seriesUpdated) {
@@ -81,6 +87,7 @@ public class SeriesRepresentation {
                 }).orElseThrow(() -> new NotFound("Series inexistant"));
     }
     
+    @ApiOperation(value = "Permet de supprimer une série")
     @DeleteMapping(value = "/{seriesId}")
     public ResponseEntity<?> deleteProjet(@PathVariable("seriesId") String seriesId) {
         

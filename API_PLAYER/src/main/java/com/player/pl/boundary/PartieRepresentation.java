@@ -14,6 +14,8 @@ import com.player.pl.entity.Partie;
 import com.player.pl.entity.Photo;
 import com.player.pl.entity.Series;
 import com.player.pl.exception.NotFound;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -30,6 +32,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
+@Api(description="API Pour la gestion des parties pour l'atelier 2")
 @RequestMapping("/partie")
 public class PartieRepresentation {
 
@@ -51,6 +54,7 @@ public class PartieRepresentation {
                 .compact();
     }
 
+    @ApiOperation(value = "Permet de récupérer toutes les parties en cours. Il faut indiquer la page et le nombre de résultats à afficher")
     @GetMapping()
     public ResponseEntity<?> getParties(
             @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
@@ -59,6 +63,7 @@ public class PartieRepresentation {
         return new ResponseEntity<>(parties, HttpStatus.OK);
     }
 
+    @ApiOperation(value = "Permet de récupérer une partie avec son id et son token associé dans le header")
     @GetMapping(value = "/{partieId}")
     public ResponseEntity<?> getPartieById(@PathVariable("partieId") String id,@RequestHeader(value = "token", required = false, defaultValue = "") String tokenHeader) {
         if (!pr.existsById(id)) {
@@ -72,6 +77,7 @@ public class PartieRepresentation {
         }
     }
 
+    @ApiOperation(value = "Permet de créer une partie. Retourne l'id de la partie et son token")
     @PostMapping(value = "/{serieid}")
     public ResponseEntity<?> postPartie(@PathVariable("serieid") String serieid, @RequestBody Partie partie) {
         if (!sr.existsById(serieid)) {
@@ -88,12 +94,16 @@ public class PartieRepresentation {
         if (partie.getNb_photos() == null) {
             partie.setNb_photos("10");
         }
+        for(int i = 0; i < Integer.parseInt(partie.getNb_photos()); i++) {
+            partie.addPhoto(shufflePhoto.get(i));
+        }
         Partie saved = pr.save(partie);
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.setLocation(linkTo(PartieRepresentation.class).slash(saved.getId()).toUri());
         return new ResponseEntity<>("{\"id\":\"" + saved.getId() + "\",\"token\":\"" + saved.getToken() + "\"}", responseHeaders, HttpStatus.CREATED);
     }
-
+    
+    @ApiOperation(value = "Permet de modifier la partie avec l'id donnée")
     @PutMapping(value = "/{partieId}")
     public ResponseEntity<?> updatePartie(@PathVariable("partieId") String partieId,
             @RequestBody Partie partieUpdated, @RequestHeader(value = "token", required = false, defaultValue = "") String tokenHeader) {
@@ -110,6 +120,7 @@ public class PartieRepresentation {
                 }).orElseThrow(() -> new NotFound("Partie inexistante"));
     }
 
+    @ApiOperation(value = "Permet de supprimer une partie")
     @DeleteMapping(value = "/{partieId}")
     public ResponseEntity<?> deletePartie(@PathVariable("partieId") String idpartie) throws NotFound {
         return pr.findById(idpartie).map(partie -> {
