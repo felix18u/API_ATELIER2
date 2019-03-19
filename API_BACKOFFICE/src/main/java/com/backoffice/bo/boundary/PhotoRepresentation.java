@@ -2,6 +2,7 @@ package com.backoffice.bo.boundary;
 
 import com.backoffice.bo.entity.Photo;
 import com.backoffice.bo.entity.Series;
+import com.backoffice.bo.exception.NotFound;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpStatus;
@@ -23,6 +24,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -61,9 +63,9 @@ public class PhotoRepresentation {
         return ResponseEntity.ok().contentType(MediaType.MULTIPART_FORM_DATA).body(bytes);
     }
 
-    @ApiOperation(value = "Permet d'enregistrer une photo dans la table et sur le disque /Ne marche pas/")
-    @PostMapping(value = "/upload")
-    public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile uploadfile) {
+    @ApiOperation(value = "Permet d'enregistrer une photo dans la table et sur le disque")
+    @PostMapping(value = "/upload/{serieid}")
+    public ResponseEntity<?> uploadFile(@PathVariable("serieid") String serieid, @RequestParam("file") MultipartFile uploadfile) {
 
         logger.debug("File upload!");
         if (uploadfile.isEmpty()) {
@@ -71,26 +73,30 @@ public class PhotoRepresentation {
         }
         try {
             saveUploadedFiles(Arrays.asList(uploadfile));
-            Series fakeseries = new Series(null, null, null, null, null, null);
-            fakeseries.setId("1");
-            Photo photo = new Photo(null, null, null, UPLOADED_FOLDER + uploadfile.getOriginalFilename(), fakeseries);
-            photo.setId(UUID.randomUUID().toString());
-            Photo saved = fr.save(photo);
-            return new ResponseEntity("{\"id\":\"" + saved.getId() + "\",\"file\":\"" + uploadfile.getOriginalFilename() + "\"}",
-                new HttpHeaders(), HttpStatus.OK);
         } catch (IOException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+        Optional<Series> serie = sr.findById(serieid);
+        Photo photo = new Photo(null, null, null, UPLOADED_FOLDER + uploadfile.getOriginalFilename(), serie.get());
+        photo.setId(UUID.randomUUID().toString());
+        Photo saved = fr.save(photo);
+        return new ResponseEntity("{\"id\":\"" + saved.getId() + "\",\"file\":\"" + uploadfile.getOriginalFilename() + "\"}",
+                new HttpHeaders(), HttpStatus.OK);
     }
 
     @ApiOperation(value = "Permet d'enregistrer les informations d'une photo dans la table")
-    @PostMapping(value = "/info/{serieid}")
-    public ResponseEntity<?> uploadInfo(@PathVariable("serieid") String serieid, @RequestBody Photo photo) {
-        photo.setId(UUID.randomUUID().toString());
-        Series serie = sr.findById(serieid).get();
-        photo.setSerie(serie);
-        Photo saved = fr.save(photo);
-        return new ResponseEntity<>(saved, HttpStatus.CREATED);
+    @PutMapping(value = "/info/{photoid}")
+    public ResponseEntity<?> uploadInfo(@PathVariable("photoid") String photoid, @RequestBody Photo photoUpdated) {
+        if (!fr.existsById(photoid)) {
+            throw new NotFound("Photo inexistante");
+        }
+        return fr.findById(photoid)
+                .map(Photo -> {
+                    photoUpdated.setId(Photo.getId());
+                    photoUpdated.setSerie(Photo.getSerie());
+                    fr.save(photoUpdated);
+                    return new ResponseEntity<>(Photo, HttpStatus.CREATED);
+                }).orElseThrow(() -> new NotFound("Series inexistante"));
     }
 
     private void saveUploadedFiles(List<MultipartFile> files) throws IOException {

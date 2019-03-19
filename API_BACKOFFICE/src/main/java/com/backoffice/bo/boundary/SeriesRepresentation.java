@@ -83,7 +83,7 @@ public class SeriesRepresentation {
                 .map(categorie -> {
                     seriesUpdated.setId(categorie.getId());
                     sr.save(seriesUpdated);
-                    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+                    return new ResponseEntity<>(categorie, HttpStatus.CREATED);
                 }).orElseThrow(() -> new NotFound("Series inexistant"));
     }
     
