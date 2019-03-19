@@ -66,20 +66,21 @@ public class PhotoRepresentation {
     public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile uploadfile) {
 
         logger.debug("File upload!");
-        Photo saved;
         if (uploadfile.isEmpty()) {
             return new ResponseEntity("No file", HttpStatus.BAD_REQUEST);
         }
         try {
             saveUploadedFiles(Arrays.asList(uploadfile));
-            Photo photo = new Photo(null, null, null, UPLOADED_FOLDER + uploadfile.getOriginalFilename(), new Series(null, null, null, null, null, null));
+            Series fakeseries = new Series(null, null, null, null, null, null);
+            fakeseries.setId("1");
+            Photo photo = new Photo(null, null, null, UPLOADED_FOLDER + uploadfile.getOriginalFilename(), fakeseries);
             photo.setId(UUID.randomUUID().toString());
-            saved = fr.save(photo);
+            Photo saved = fr.save(photo);
+            return new ResponseEntity("{\"id\":\"" + saved.getId() + "\",\"file\":\"" + uploadfile.getOriginalFilename() + "\"}",
+                new HttpHeaders(), HttpStatus.OK);
         } catch (IOException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity("{\"id\":\"" + saved.getId() + "\",\"file\":\"" + uploadfile.getOriginalFilename() + "\"}",
-                new HttpHeaders(), HttpStatus.OK);
     }
 
     @ApiOperation(value = "Permet d'enregistrer les informations d'une photo dans la table")
