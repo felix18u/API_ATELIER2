@@ -1,10 +1,8 @@
 package com.player.pl.entity;
 
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.CascadeType;
-import org.hibernate.annotations.CreationTimestamp;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -24,8 +22,6 @@ public class Partie {
     private String status;
     private String score;
     private String joueur;
-    @CreationTimestamp
-    private Date created;
 
     @ManyToOne
     @JoinColumn(name = "serie_id", nullable = false)
@@ -99,14 +95,6 @@ public class Partie {
 
     public void setJoueur(String joueur) {
         this.joueur = joueur;
-    }
-
-    public Date getCreated() {
-        return created;
-    }
-
-    public void setCreated(Date created) {
-        this.created = created;
     }
     
     public void addPhoto(Photo photo) {

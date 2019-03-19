@@ -94,6 +94,9 @@ public class PartieRepresentation {
         if (partie.getNb_photos() == null) {
             partie.setNb_photos("10");
         }
+        for(int i = 0; i < Integer.parseInt(partie.getNb_photos()); i++) {
+            partie.addPhoto(shufflePhoto.get(i));
+        }
         Partie saved = pr.save(partie);
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.setLocation(linkTo(PartieRepresentation.class).slash(saved.getId()).toUri());

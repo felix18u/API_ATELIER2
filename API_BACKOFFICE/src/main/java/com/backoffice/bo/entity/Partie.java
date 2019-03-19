@@ -1,10 +1,8 @@
 package com.backoffice.bo.entity;
 
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.CascadeType;
-import org.hibernate.annotations.CreationTimestamp;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -24,23 +22,21 @@ public class Partie {
     private String status;
     private String score;
     private String joueur;
-    @CreationTimestamp
-    private Date created;
 
     @ManyToOne
     @JoinColumn(name = "serie_id", nullable = false)
-        private Series serie;
+    private Series serie;
 
     @ManyToMany(cascade = {
         CascadeType.PERSIST,
         CascadeType.MERGE
     })
-    
+
     @JoinTable(name = "partie_photo",
-        joinColumns = @JoinColumn(name = "partie_id"),
-        inverseJoinColumns = @JoinColumn(name = "photo_id"))
-        private Set<Photo> photo = new HashSet<>();
-    
+            joinColumns = @JoinColumn(name = "partie_id"),
+            inverseJoinColumns = @JoinColumn(name = "photo_id"))
+    private Set<Photo> photo = new HashSet<>();
+
     Partie() {
         //pour JPA	
     }
@@ -100,15 +96,7 @@ public class Partie {
     public void setJoueur(String joueur) {
         this.joueur = joueur;
     }
-
-    public Date getCreated() {
-        return created;
-    }
-
-    public void setCreated(Date created) {
-        this.created = created;
-    }
-
+    
     public void addPhoto(Photo photo) {
         this.photo.add(photo);
         photo.getPartie().add(this);
