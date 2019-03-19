@@ -18,5 +18,17 @@ public interface PhotoRepository extends CrudRepository<Photo, String> {
     List<Photo> findAll();
 
     Optional<Photo> findById(String id);
+    
+    void init();
+
+    void store(MultipartFile file);
+
+    Stream<Path> loadAll();
+
+    Path load(String filename);
+
+    Resource loadAsResource(String filename);
+
+    void deleteAll();
 
 }

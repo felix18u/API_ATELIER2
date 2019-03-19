@@ -65,7 +65,7 @@ public class PhotoRepresentation {
     @PostMapping(value = "/upload")
     public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile uploadfile) {
 
-        logger.debug("File upload!");
+        /*logger.debug("File upload!");
 
         if (uploadfile.isEmpty()) {
             return new ResponseEntity("No file", HttpStatus.BAD_REQUEST);
@@ -73,6 +73,19 @@ public class PhotoRepresentation {
         try {
             saveUploadedFiles(Arrays.asList(uploadfile));
         } catch (IOException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity("Uploaded - " + uploadfile.getOriginalFilename(),
+                new HttpHeaders(), HttpStatus.OK);*/
+        
+        logger.debug("File upload!");
+
+        if (uploadfile.isEmpty()) {
+            return new ResponseEntity("No file", HttpStatus.BAD_REQUEST);
+        }
+        try {
+            fr.store(uploadfile);
+        } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity("Uploaded - " + uploadfile.getOriginalFilename(),

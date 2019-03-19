@@ -4,6 +4,8 @@ services:
     build:
       context: ./API_BACKOFFICE
       dockerfile: apibackoffice.dockerfile
+    volumes:
+      - ./images:/images
     ports:
       - "8081:8081"
     networks:
@@ -16,6 +18,8 @@ services:
     build:
       context: ./API_PLAYER
       dockerfile: apiplayer.dockerfile
+    volumes:
+      - ./images:/images
     ports:
       - "8080:8080"
     networks:
