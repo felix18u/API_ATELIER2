@@ -2,6 +2,8 @@ package com.backoffice.bo.boundary;
 
 import com.backoffice.bo.entity.Photo;
 import com.backoffice.bo.entity.Series;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
+@Api(description="API Pour la gestion des photos pour l'atelier 2")
 @RequestMapping("/photos")
 public class PhotoRepresentation {
 
@@ -41,13 +44,14 @@ public class PhotoRepresentation {
         this.sr = sr;
     }
 
+    @ApiOperation(value = "Permet de récupérer toutes les photos enregistrées")
     @GetMapping()
     public ResponseEntity<?> getPhotos() {
         Iterable<Photo> photo = fr.findAll();
         return new ResponseEntity<>(photo, HttpStatus.OK);
     }
     
-    /*Partie photo*/
+    @ApiOperation(value = "Permet de une photo avec l'id donnée")
     @GetMapping("/{photoid}")
     public ResponseEntity<?> uploadFile(@PathVariable("photoid") String photoid) throws IOException {
         Optional<Photo> photo = fr.findById(photoid);
@@ -57,6 +61,7 @@ public class PhotoRepresentation {
         return ResponseEntity.ok().contentType(MediaType.MULTIPART_FORM_DATA).body(bytes);
     }
 
+    @ApiOperation(value = "Permet d'enregistrer une photo dans la table et sur le disque /Ne marche pas/")
     @PostMapping(value = "/upload")
     public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile uploadfile) {
 
@@ -75,6 +80,7 @@ public class PhotoRepresentation {
 
     }
 
+    @ApiOperation(value = "Permet d'enregistrer les informations d'une photo dans la table")
     @PostMapping(value = "/info/{serieid}")
     public ResponseEntity<?> uploadInfo(@PathVariable("serieid") String serieid, @RequestBody Photo photo) {
         photo.setId(UUID.randomUUID().toString());
