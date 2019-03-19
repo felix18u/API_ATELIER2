@@ -8,7 +8,7 @@ import org.springframework.boot.autoconfigure.web.ServerProperties.Tomcat.Resour
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.rest.core.Path;
+import java.nio.file.Path;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface PhotoRepository extends CrudRepository<Photo, String> {
@@ -18,17 +18,5 @@ public interface PhotoRepository extends CrudRepository<Photo, String> {
     List<Photo> findAll();
 
     Optional<Photo> findById(String id);
-    
-    void init();
-
-    void store(MultipartFile file);
-
-    Stream<Path> loadAll();
-
-    Path load(String filename);
-
-    Resource loadAsResource(String filename);
-
-    void deleteAll();
 
 }
