@@ -100,7 +100,7 @@ public class PartieRepresentation {
         Partie saved = pr.save(partie);
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.setLocation(linkTo(PartieRepresentation.class).slash(saved.getId()).toUri());
-        return new ResponseEntity<>(partie, responseHeaders, HttpStatus.CREATED);
+        return new ResponseEntity<>("{\"id\":\"" + saved.getId() + "\",\"token\":\"" + saved.getToken() + "\"}", responseHeaders, HttpStatus.CREATED);
     }
     
     @ApiOperation(value = "Permet de modifier la partie avec l'id donnée")
