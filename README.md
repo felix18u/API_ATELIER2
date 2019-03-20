@@ -21,6 +21,16 @@ Tous les containers seront lancés en même temps.
 -d : Vous permet de reprendre la main sur votre invite de commande.
 --build : Va construire les container avant de les executer
 
+Pour remplir la table d'exemple:
+```sh
+$ docker cp ./data.sql postgres:/docker-entrypoint-initdb.d/dump.sql
+$ docker exec -u postgres postgres psql postgres postgres -f docker-entrypoint-initdb.d/dump.sql
+```
+
+
+Ces commandes va copier le fichier data.sql dans le container postgres puis executer le script sql
+
+
 ## Utilisation : 
 ### API PLAYER
 
