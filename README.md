@@ -1,6 +1,18 @@
 # GeoQuizz
 
+## Prérequis
+
+•  Maven
+•  Docker
+•  Docker-compose
+
+
 ## Installation
+
+Dans un premier temps, verifier que votre ip de votre machine docker correspond à celle des applications
+
+•  Vuejs partie
+•  Vuejs backoffice
 
 Build des deux APIs depuis la racine du projet : 
 ```sh
@@ -32,6 +44,12 @@ Ces commandes va copier le fichier data.sql dans le container postgres puis exec
 
 
 ## Utilisation : 
+### DOCUMENTATION
+
+Vous pouvez acceder à la documentation de l'api grâce a cet adresse : 
+
+•  {IpMachineDocker}/swagger-ui.html
+
 ### API PLAYER
 
 | Nom | Description | Method | Nom |
