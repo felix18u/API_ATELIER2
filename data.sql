@@ -27,3 +27,5 @@ INSERT INTO photo (id, descr, lat, lon, url, serie_id) VALUES
         ('d31198a2-7980-42ad-9533-616f7ace9eea', null, null, null, null, 'fc04aea4-c4fd-4cad-b8df-c985378e20dc'),
         ('d105ca6f-e4aa-4488-a115-59136527dfca', null, null, null, null, 'fc04aea4-c4fd-4cad-b8df-c985378e20dc'),
         ('7c762b83-2c60-4e9b-8558-b57c3d8586de', null, null, null, null, 'fc04aea4-c4fd-4cad-b8df-c985378e20dc');
+
+INSERT INTO USER(username, password) VALUES('admin', 'admin')
