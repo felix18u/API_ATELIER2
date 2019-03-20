@@ -9,10 +9,10 @@
 
 ## Installation
 
-Dans un premier temps, verifier que votre ip de votre machine docker correspond à celle des applications
+Dans un premier temps, verifier que l'ip de votre machine docker correspond à celle des applications
 
-•  Vuejs partie
-•  Vuejs backoffice
+•  Modifier la variable 'host' dans la partie 'data' de l'instance de Vue du fichier player.js 
+•  Modifier la variable 'host' dans la partie 'data' de l'instance de Vue du fichier backoffice.html
 
 Build des deux APIs depuis la racine du projet : 
 ```sh
@@ -40,13 +40,13 @@ $ docker exec -u postgres postgres psql postgres postgres -f docker-entrypoint-i
 ```
 
 
-Ces commandes va copier le fichier data.sql dans le container postgres puis executer le script sql
+Ces commandes vont copier le fichier data.sql dans le container postgres puis executer le script sql
 
 
 ## Utilisation : 
 ### DOCUMENTATION
 
-Vous pouvez acceder à la documentation de l'api grâce a cet adresse : 
+Vous pouvez accéder à la documentation de l'api grâce a cette adresse : 
 
 •  {IpMachineDocker}/swagger-ui.html
 
