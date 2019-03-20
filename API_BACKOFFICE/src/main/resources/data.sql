@@ -27,3 +27,13 @@ INSERT INTO photo (id, descr, lat, lon, url, serie_id) VALUES
         ('d31198a2-7980-42ad-9533-616f7ace9eea', null, null, null, null, null, 'fc04aea4-c4fd-4cad-b8df-c985378e20dc'),
         ('d105ca6f-e4aa-4488-a115-59136527dfca', null, null, null, null, null, 'fc04aea4-c4fd-4cad-b8df-c985378e20dc'),
         ('7c762b83-2c60-4e9b-8558-b57c3d8586de', null, null, null, null, null, 'fc04aea4-c4fd-4cad-b8df-c985378e20dc');
+
+INSERT INTO app_role (id, role_name, description) VALUES (1, 'STANDARD_USER', 'Standard User');
+INSERT INTO app_role (id, role_name, description) VALUES (2, 'ADMIN_USER', 'Admin User');
+
+INSERT INTO app_user (id, first_name, last_name, password, username) VALUES (1, 'John', 'Doe', '$2a$10$bj7qFEPpCcYOPqncrWQAnOGZ3onz78ipBoykaV9vidBFZxmhcfcHa', 'john.doe');
+INSERT INTO app_user (id, first_name, last_name, password, username) VALUES (2, 'Admin', 'Admin', '$2a$10$qtH0F1m488673KwgAfFXEOWxsoZSeHqqlB/8BTt3a6gsI5c2mdlfe', 'admin.admin');
+
+INSERT INTO user_role(user_id, role_id) VALUES(1,1);
+INSERT INTO user_role(user_id, role_id) VALUES(2,1);
+INSERT INTO user_role(user_id, role_id) VALUES(2,2);

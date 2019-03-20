@@ -29,6 +29,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import java.io.File;
+import java.util.Base64;
+import java.util.logging.Level;
+import org.apache.commons.io.FileUtils;
+import org.springframework.web.bind.annotation.RequestHeader;
 
 @RestController
 @Api(description="API Pour la gestion des photos pour l'atelier 2")
@@ -98,6 +103,23 @@ public class PhotoRepresentation {
         Photo saved = fr.save(photo);
         return new ResponseEntity<>(saved, HttpStatus.CREATED);
     }
+    
+    @ApiOperation(value = "Permet d'enregistrer une photo dans la table et sur le disque a partir d'une smartphone")
+    @PostMapping(value = "/mobile/{serieid}")
+    public ResponseEntity<?> uploadMobile(@PathVariable("serieid") String serieid, @RequestBody Photo sendphoto, @RequestHeader(value = "base64", required = false, defaultValue = "") String base64) {
+
+        Optional<Series> serie = sr.findById(serieid);
+        try {
+            saveBase64Files(base64, sendphoto.getUrl());
+        } catch (IOException ex) {
+            java.util.logging.Logger.getLogger(PhotoRepresentation.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        Photo photo = new Photo(null, null, null, UPLOADED_FOLDER + sendphoto.getUrl(), serie.get());
+        photo.setId(UUID.randomUUID().toString());
+        Photo saved = fr.save(photo);
+        return new ResponseEntity("{\"id\":\"" + saved.getId() + "\",\"file\":\"" + sendphoto.getUrl() + "\"}",
+                new HttpHeaders(), HttpStatus.OK);
+    }
 
     private void saveUploadedFiles(List<MultipartFile> files) throws IOException {
 
@@ -110,4 +132,12 @@ public class PhotoRepresentation {
             Files.write(path, bytes);
         }
     }
+    
+    private void saveBase64Files(String base64, String namefile) throws IOException {
+
+        byte[] decodedBytes = Base64.getDecoder().decode(base64);
+        String path = UPLOADED_FOLDER + namefile;
+        FileUtils.writeByteArrayToFile(new File(path), decodedBytes);
+    }
 }
+
