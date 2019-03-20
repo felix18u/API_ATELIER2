@@ -1,5 +1,5 @@
 INSERT INTO series (id, dist, lat1, lat2, lon1, lon2, ville) VALUES
-        ('2d63505e-139d-4211-9ebc-21b0055e18d3', null, null, null, null, null, 'Ville 1'),
+        ('2d63505e-139d-4211-9ebc-21b0055e18d3', '2388618.8012180747', '53.199451902831555', '13.535156250000002', '37.96152331396614', '-8.437500000000002', 'Nancy'),
         ('fc04aea4-c4fd-4cad-b8df-c985378e20dc', null, null, null, null, null, 'Ville 2'),
         ('2840f7a9-e0fe-456b-bb79-0cbe45827485', null, null, null, null, null, 'Ville 3'),
         ('19f96e46-977b-4664-b964-0b53292fc86a', null, null, null, null, null, 'Ville 4'),
