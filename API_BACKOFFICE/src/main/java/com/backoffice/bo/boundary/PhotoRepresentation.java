@@ -106,11 +106,11 @@ public class PhotoRepresentation {
     
     @ApiOperation(value = "Permet d'enregistrer une photo dans la table et sur le disque a partir d'une smartphone")
     @PostMapping(value = "/mobile/{serieid}")
-    public ResponseEntity<?> uploadMobile(@PathVariable("serieid") String serieid, @RequestBody Photo sendphoto, @RequestHeader(value = "base64", required = false, defaultValue = "") String base64) {
+    public ResponseEntity<?> uploadMobile(@PathVariable("serieid") String serieid, @RequestBody Photo sendphoto) {
 
         Optional<Series> serie = sr.findById(serieid);
         try {
-            saveBase64Files(base64, sendphoto.getUrl());
+            saveBase64Files(sendphoto.getUrl());
         } catch (IOException ex) {
             java.util.logging.Logger.getLogger(PhotoRepresentation.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -133,10 +133,13 @@ public class PhotoRepresentation {
         }
     }
     
-    private void saveBase64Files(String base64, String namefile) throws IOException {
+    private void saveBase64Files(String base64) throws IOException {
 
+        String[] parts = base64.split("-");
+        String[] parts2 = parts[0].split("/");
+        String[] parts3 = parts2[1].split(";");
         byte[] decodedBytes = Base64.getDecoder().decode(base64);
-        String path = UPLOADED_FOLDER + namefile;
+        String path = UPLOADED_FOLDER + parts3[1] + parts3[0];
         FileUtils.writeByteArrayToFile(new File(path), decodedBytes);
     }
 }
